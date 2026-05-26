@@ -1,0 +1,65 @@
+{
+  "archive": "demo-fixture",
+  "extract_root": "demo-fixture",
+  "artifact_counts": {"syslog": 2, "wafl.log": 1, "statit": 3, "nblade": 1, "large_io": 1},
+  "syslog_events": {
+    "event_count": 47,
+    "category_counts": {
+      "nblade": 8,
+      "stat_storm": 22,
+      "large_io": 6,
+      "wafl": 5,
+      "resource": 6
+    },
+    "sample_events": [
+      {
+        "category": "stat_storm",
+        "line": "2026-05-20T14:18:01Z node-01: stat storm: 28400 getattr ops/sec on flexgroup vol_fg01 constituent vol_fg01_0001",
+        "source": "syslog"
+      },
+      {
+        "category": "nblade",
+        "line": "2026-05-20T14:19:15Z node-01: nblade protocol latency p99=38ms nfs3_read queue_depth=256",
+        "source": "syslog"
+      },
+      {
+        "category": "large_io",
+        "line": "2026-05-20T14:22:45Z node-02: large_io pipeline: 412 active sequential reads avg_size=1MB on vol_fg01",
+        "source": "syslog"
+      },
+      {
+        "category": "resource",
+        "line": "2026-05-20T14:25:30Z node-01: CPU starvation — nblade worker threads blocked waiting for stat completion",
+        "source": "syslog"
+      }
+    ]
+  },
+  "wafl_signals": {
+    "signals": {
+      "wafl_alloc_delay": 3,
+      "cp_delay": 1,
+      "fragmentation": 0,
+      "metadata_contention": 4,
+      "large_io_wafl": 2
+    },
+    "samples": [
+      {"signal": "wafl_alloc_delay", "line": "wafl: block alloc delay 12ms aggr1 — concurrent large IO + stat metadata pressure"},
+      {"signal": "metadata_contention", "line": "wafl: inode cache miss storm — 18k inode lookups/sec during stat storm"}
+    ]
+  },
+  "statit_signals": {
+    "section_hits": {
+      "nblade": 14,
+      "large_io": 9,
+      "disk": 3,
+      "cpu": 11,
+      "stat": 28
+    },
+    "latency_samples": [
+      {"value": "38", "unit": "ms", "line": "nblade nfs3_read latency p99=38ms", "source": "statit_nblade.out"},
+      {"value": "4.2", "unit": "ms", "line": "dblade read latency p99=4.2ms", "source": "statit_nblade.out"},
+      {"value": "12", "unit": "ms", "line": "wafl alloc latency avg=12ms", "source": "statit_wafl.out"}
+    ],
+    "files_parsed": 5
+  }
+}

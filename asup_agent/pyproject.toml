@@ -1,0 +1,23 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "asup-agent"
+version = "0.1.0"
+description = "AutoSupport archive parser and ONTAP RCA workflow engine"
+requires-python = ">=3.11"
+dependencies = [
+    "pydantic>=2.0.0",
+]
+
+[project.optional-dependencies]
+archive = ["py7zr>=0.21.0"]
+
+[project.scripts]
+asup-parse = "asup_agent.cli:main"
+asup-rca = "asup_agent.rca.workflow:main"
+asup-agent = "asup_agent.agent:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/asup_agent"]

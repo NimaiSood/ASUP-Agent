@@ -1,0 +1,32 @@
+[
+  {
+    "timestamp": "2026-05-20T14:12:00Z",
+    "metric": "volume_read_latency",
+    "description": "vol_fg01 read latency p99 jumped 2ms → 48ms (+2300%)"
+  },
+  {
+    "timestamp": "2026-05-20T14:15:00Z",
+    "metric": "node_cpu_utilization",
+    "description": "node-01 nblade CPU sustained >85% for 12 minutes"
+  },
+  {
+    "timestamp": "2026-05-20T14:18:00Z",
+    "metric": "stat_ops_per_sec",
+    "description": "FlexGroup vol_fg01 stat ops/sec 3.2k → 28k across 8 constituents"
+  },
+  {
+    "timestamp": "2026-05-20T14:22:00Z",
+    "metric": "volume_read_ops",
+    "description": "Large IO read ops (>256KB) increased 400% on vol_fg01"
+  },
+  {
+    "timestamp": "2026-05-20T14:35:00Z",
+    "metric": "cluster_network_utilization",
+    "description": "Inter-node traffic spike on cluster interconnect during stat storm"
+  },
+  {
+    "timestamp": "2026-05-20T15:10:00Z",
+    "metric": "volume_read_latency",
+    "description": "Latency subsiding — p99 back to 4ms after stat workload stopped"
+  }
+]
