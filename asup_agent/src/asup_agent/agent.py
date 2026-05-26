@@ -25,6 +25,7 @@ class AgentConfig:
     volumes: list[str] | None = None
     asup_path: str | None = None
     use_live: bool = False
+    live_ems: bool = False
 
 
 def _log(step: int, msg: str) -> None:
@@ -92,9 +93,12 @@ def run_agent(config: AgentConfig | None = None) -> dict[str, Any]:
     _log(2, "Log extraction — querying EMS events")
     ems_data = _try_live_ems() if cfg.use_live else None
     if ems_data is None:
+        if cfg.use_live:
+            _log(2, "  → Live EMS unavailable, falling back to fixtures")
         ems_data = _load_fixture("ems_events.json")
         _log(2, f"  → {ems_data.get('num_records', 0)} EMS events (fixture)")
     else:
+        cfg.live_ems = True
         _log(2, f"  → {ems_data.get('num_records', 0)} EMS events (live)")
 
     vol_stats = _try_live_volumes(cfg.svm) if cfg.use_live else None
@@ -133,32 +137,77 @@ def run_agent(config: AgentConfig | None = None) -> dict[str, Any]:
     if rc:
         _log(6, f"  → Root cause: {rc['id']} — {rc['title']}")
 
-    report["mode"] = "live" if cfg.use_live and ems_data else "demo"
+    report["mode"] = "live" if cfg.live_ems else ("demo" if not cfg.use_live else "hybrid")
     report["volume_stats"] = vol_stats
+    if cfg.use_live:
+        report["ontap_host"] = os.environ.get("ONTAP_MGMT_HOST")
     return report
 
 
 def main() -> None:
     import argparse
 
-    parser = argparse.ArgumentParser(description="Run ASUP RCA agent")
-    parser.add_argument("--cluster", default="demo-cluster-01")
+    from asup_agent.credentials import apply_credentials, resolve_credentials
+
+    parser = argparse.ArgumentParser(
+        description="Run ASUP RCA agent",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+  python3 -m asup_agent.agent              # prompts for cluster IP, username, password
+  python3 -m asup_agent.agent --demo       # demo fixtures only, no prompts
+  python3 -m asup_agent.agent --cluster-ip 192.168.1.50 --username admin
+        """,
+    )
+    parser.add_argument("--demo", action="store_true", help="Run with demo fixtures (no ONTAP prompts)")
+    parser.add_argument("--cluster-ip", help="ONTAP cluster management IP or hostname")
+    parser.add_argument("--username", "-u", help="ONTAP REST API username")
+    parser.add_argument("--password", "-p", help="ONTAP password (prefer prompt for security)")
+    parser.add_argument(
+        "--no-verify-ssl",
+        action="store_true",
+        help="Disable TLS certificate verification",
+    )
+    parser.add_argument("--cluster", help="Cluster display name in report (default: cluster IP)")
     parser.add_argument("--window-start", default="2026-05-20T14:00:00Z")
     parser.add_argument("--window-end", default="2026-05-20T15:30:00Z")
     parser.add_argument("--symptom", default="NFS read latency spike on FlexGroup vol_fg01")
     parser.add_argument("--svm", default="svm_nfs01")
     parser.add_argument("--asup", help="Path to ASUP archive")
-    parser.add_argument("--live", action="store_true", help="Use live ONTAP REST (requires env vars)")
+    parser.add_argument(
+        "--live",
+        action="store_true",
+        help="Deprecated: live mode is default unless --demo is set",
+    )
     args = parser.parse_args()
 
+    use_live = not args.demo
+    cluster_name = args.cluster
+
+    if use_live:
+        creds = resolve_credentials(
+            cluster_ip=args.cluster_ip,
+            username=args.username,
+            password=args.password,
+            verify_ssl=False if args.no_verify_ssl else None,
+            interactive=True,
+            use_env=True,
+        )
+        if creds is None:
+            print("ONTAP credentials required. Use --cluster-ip or set ONTAP_* env vars.", file=sys.stderr)
+            sys.exit(1)
+        apply_credentials(creds)
+        if not cluster_name:
+            cluster_name = creds.cluster_ip
+
     report = run_agent(AgentConfig(
-        cluster=args.cluster,
+        cluster=cluster_name or "demo-cluster-01",
         window_start=args.window_start,
         window_end=args.window_end,
         symptom=args.symptom,
         svm=args.svm,
         asup_path=args.asup,
-        use_live=args.live,
+        use_live=use_live,
     ))
     print(json.dumps(report, indent=2))
 
