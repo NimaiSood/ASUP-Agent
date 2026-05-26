@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+dist/
+build/
+*.egg
+.venv/
+venv/
+.env
+.env.*
+
+# IDE
+.idea/
+.vscode/
+*.swp
+.DS_Store
+
+# ASUP / secrets
+*.key
+*.7z
+*.tar.gz
+autosupport/
+extracted_asup/
+
+# MCP local overrides (may contain credentials)
+mcp.json
