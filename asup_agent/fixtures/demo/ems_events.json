@@ -1,0 +1,69 @@
+{
+  "num_records": 8,
+  "records": [
+    {
+      "index": 88421,
+      "time": "2026-05-20T14:17:32+00:00",
+      "log_message": "stat.request.queue.full: Metadata stat request queue depth exceeded threshold on node node-01",
+      "message": {"name": "stat.request.queue.full", "severity": "error"},
+      "node": {"name": "node-01", "uuid": "a1b2c3d4-0001-4000-8000-000000000001"},
+      "parameters": [{"name": "queue_depth", "value": 512}]
+    },
+    {
+      "index": 88422,
+      "time": "2026-05-20T14:18:05+00:00",
+      "log_message": "flexgroup.stat.storm: High concurrent stat operations detected on vol_fg01 (constituents: 8)",
+      "message": {"name": "flexgroup.stat.storm", "severity": "alert"},
+      "node": {"name": "node-01", "uuid": "a1b2c3d4-0001-4000-8000-000000000001"},
+      "parameters": [{"name": "stat_ops_sec", "value": 28400}]
+    },
+    {
+      "index": 88430,
+      "time": "2026-05-20T14:19:12+00:00",
+      "log_message": "nblade.cpu.high: Network blade CPU utilization above 85% on node-01",
+      "message": {"name": "nblade.cpu.high", "severity": "warning"},
+      "node": {"name": "node-01", "uuid": "a1b2c3d4-0001-4000-8000-000000000001"},
+      "parameters": [{"name": "cpu_pct", "value": 87}]
+    },
+    {
+      "index": 88445,
+      "time": "2026-05-20T14:22:40+00:00",
+      "log_message": "large_io.read.active: Large IO read pipeline active — 412 concurrent large reads on vol_fg01",
+      "message": {"name": "large_io.read.active", "severity": "notice"},
+      "node": {"name": "node-02", "uuid": "a1b2c3d4-0001-4000-8000-000000000002"},
+      "parameters": [{"name": "lio_count", "value": 412}]
+    },
+    {
+      "index": 88451,
+      "time": "2026-05-20T14:23:18+00:00",
+      "log_message": "wafl.alloc.delay: WAFL block allocation delay detected — avg 12ms on aggr1",
+      "message": {"name": "wafl.alloc.delay", "severity": "warning"},
+      "node": {"name": "node-02", "uuid": "a1b2c3d4-0001-4000-8000-000000000002"},
+      "parameters": [{"name": "delay_ms", "value": 12}]
+    },
+    {
+      "index": 88460,
+      "time": "2026-05-20T14:25:00+00:00",
+      "log_message": "cs.session.queue: Cluster session layer request queue depth elevated",
+      "message": {"name": "cs.session.queue", "severity": "warning"},
+      "node": {"name": "node-01", "uuid": "a1b2c3d4-0001-4000-8000-000000000001"},
+      "parameters": [{"name": "queue_depth", "value": 128}]
+    },
+    {
+      "index": 88472,
+      "time": "2026-05-20T14:35:55+00:00",
+      "log_message": "resource.cpu.starvation: CPU starvation detected — nblade thread pool saturated",
+      "message": {"name": "resource.cpu.starvation", "severity": "error"},
+      "node": {"name": "node-01", "uuid": "a1b2c3d4-0001-4000-8000-000000000001"},
+      "parameters": []
+    },
+    {
+      "index": 88501,
+      "time": "2026-05-20T15:08:22+00:00",
+      "log_message": "stat.request.queue.full: Stat queue depth returned to normal on node-01",
+      "message": {"name": "stat.request.queue.normal", "severity": "notice"},
+      "node": {"name": "node-01", "uuid": "a1b2c3d4-0001-4000-8000-000000000001"},
+      "parameters": [{"name": "queue_depth", "value": 8}]
+    }
+  ]
+}

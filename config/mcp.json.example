@@ -1,0 +1,25 @@
+{
+  "mcpServers": {
+    "harvest-mcp": {
+      "command": "docker",
+      "args": [
+        "run",
+        "--rm",
+        "-i",
+        "--env",
+        "HARVEST_TSDB_URL=http://your-prometheus:9090",
+        "ghcr.io/netapp/harvest-mcp:latest"
+      ]
+    },
+    "ontap-mcp": {
+      "command": "python3",
+      "args": ["-m", "ontap_mcp.server"],
+      "env": {
+        "ONTAP_MGMT_HOST": "https://cluster-mgmt.example.com",
+        "ONTAP_USERNAME": "admin",
+        "ONTAP_PASSWORD": "${ONTAP_PASSWORD}",
+        "ONTAP_VERIFY_SSL": "true"
+      }
+    }
+  }
+}
